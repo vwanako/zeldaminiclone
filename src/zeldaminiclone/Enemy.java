@@ -1,15 +1,14 @@
 package zeldaminiclone;
 
-import java.awt.Color;
-import java.util.List;
-import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Player extends Rectangle
-{
-	public int spd = 4;
-	public boolean right, up, down, left;
+public class Enemy extends Rectangle {
+	
+	public int spd = 2;
+	public int right = 1, up = 0, down = 0, left = 0;
 	
 	public int curAnimation = 0;
 	public int curFrames = 0, targetFrames = 15;
@@ -20,41 +19,39 @@ public class Player extends Rectangle
 	public int dir = 1;
 	
 	
-	public Player(int x, int y)
+	public Enemy(int x, int y)
 	{
 		super(x, y, 32, 32);
 	}
 	
+	public void chasePlayer()
+	{
+		Player p = Game.player;
+		
+		if(x < p.x)
+		{
+			x += spd;
+		}
+		else if (x > p.x)
+		{
+			x -= spd;
+		}
+		
+		if (y < p.y)
+		{
+			y += spd;
+		}
+		else if(y > p.y)
+		{
+			y -= spd;
+		}
+	}
 	
 	public void tick()
 	{
 		boolean moved = false;
 		
-		if (right && World.isFree(x+spd, y))
-		{
-			x += spd;
-			moved = true;
-			dir = 1;
-		}
-		else if (left && World.isFree(x-spd, y))
-		{
-			x -= spd;
-			moved = true;
-			
-			dir = -1;
-		}
-		
-		if (up && World.isFree(x, y-spd))
-		{
-			y -= spd;
-			moved = true;
-		}
-		else if (down && World.isFree(x, y+spd))
-		{
-			y += spd;
-			moved = true;
-		}
-		
+		chasePlayer();
 		
 		if (moved) 
 		{
@@ -87,7 +84,7 @@ public class Player extends Rectangle
 		//g.setColor(Color.blue);
 		//g.fillRect(x, y, width, height);
 		
-		g.drawImage(Spritesheet.player_front[curAnimation],x, y, 32, 32, null);
+		g.drawImage(Spritesheet.enemy_front[curAnimation],x, y, 32, 32, null);
 		
 		for (int i = 0; i < bullets.size(); i++)
 		{
